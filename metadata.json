@@ -1,8 +1,6 @@
 {
-  "name": "Remix MKS Wallet",
-  "description": "Ứng dụng quản lý tài chính cá nhân có Chatbot AI hỗ trợ",
+  "name": "MKS Wallet",
+  "description": "Ứng dụng MKS Wallet quản lý tài chính cá nhân theo hệ thống Phiếu hàng tháng và quy tắc 50-30-20.",
   "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

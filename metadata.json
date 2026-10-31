@@ -1,0 +1,8 @@
+{
+  "name": "Remix MKS Wallet",
+  "description": "Ứng dụng quản lý tài chính cá nhân có Chatbot AI hỗ trợ",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -95,8 +95,8 @@ const VIETNAM_BANKS: Array<{ name: string; code: string; regex: RegExp }> = [
 ];
 
 async function optimizeImageForScan(file: File): Promise<{ base64: string; mimeType: string }> {
-  const MAX_DIM = 960; // 960px provides crisp clarity for OCR numbers/text while remaining lightweight (~60-90KB)
-  const QUALITY = 0.75;
+  const MAX_DIM = 1024; // Compress to max 1024px for optimal OCR recognition & lightweight memory
+  const QUALITY = 0.8;
 
   // Method 1: Modern createImageBitmap (fastest & lowest memory overhead on mobile)
   if (typeof window !== 'undefined' && 'createImageBitmap' in window) {
@@ -400,14 +400,16 @@ export function ReceiptScannerModal({
           );
         } catch (err: any) {
           console.error(`Error processing image ${nextPending.fileName}:`, err);
-          const rawErr = err?.message || String(err) || 'Unknown error';
-          let cleanMsg = `Không thể phân tích hóa đơn: ${rawErr}`;
-          if (rawErr.includes('15s') || rawErr.includes('Quá thời gian')) {
-            cleanMsg = `Quá thời gian chờ phản hồi từ AI. Nhấn Thử lại bên dưới để quét lại.`;
+          const rawErr = err?.message || String(err) || 'Lỗi không xác định';
+          let cleanMsg = `Lỗi: ${rawErr}`;
+          if (rawErr.includes('API Key') || rawErr.includes('API_KEY')) {
+            cleanMsg = `Thiếu hoặc sai API Key: ${rawErr}. Vui lòng kiểm tra lại cấu hình API Key.`;
+          } else if (rawErr.includes('25s') || rawErr.includes('Quá thời gian')) {
+            cleanMsg = `Quá thời gian chờ phản hồi từ AI (${rawErr}). Nhấn Thử lại để quét lại.`;
           } else if (rawErr.includes('503') || rawErr.includes('high demand') || rawErr.includes('UNAVAILABLE')) {
-            cleanMsg = `Mô hình AI đang bận tạm thời (503). Nhấn Thử lại sau giây lát.`;
-          } else if (rawErr.includes('429') || rawErr.includes('quota')) {
-            cleanMsg = `Đạt hạn mức gọi tạm thời (429). Vui lòng thử lại sau giây lát.`;
+            cleanMsg = `Mô hình AI đang bận tạm thời (503): ${rawErr}. Nhấn Thử lại sau giây lát.`;
+          } else if (rawErr.includes('429') || rawErr.includes('quota') || rawErr.includes('RESOURCE_EXHAUSTED')) {
+            cleanMsg = `Đạt hạn mức gọi tạm thời (429): ${rawErr}. Vui lòng thử lại sau giây lát.`;
           }
 
           setItems((prev) =>
